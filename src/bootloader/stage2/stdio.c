@@ -3,7 +3,20 @@
 
 void putc(char c)
 {
-    x86_Video_WriteCharTeletype(c, 0);
+    switch (c)
+    {
+    case '\n':
+        putc('\r');
+        goto PUTCHAR;
+        break;
+    case '\t':
+        for (int i = 0; i < 4; i++)
+            putc(' ');
+        break;
+    default:
+    PUTCHAR:
+        x86_Video_WriteCharTeletype(c, 0);
+    }
 }
 
 void puts(const char* str)
