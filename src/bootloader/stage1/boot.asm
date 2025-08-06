@@ -267,7 +267,6 @@ puts:
 ;
 
 lba_to_chs:
-
     push ax
     push dx
 
@@ -362,8 +361,8 @@ msg_stage2_not_found:   db 'STAGE2.BIN file not found!', ENDL, 0
 file_stage2_bin:        db 'STAGE2  BIN'
 stage2_cluster:         dw 0
 
-STAGE2_LOAD_SEGMENT     equ 0x2000
-STAGE2_LOAD_OFFSET      equ 0
+STAGE2_LOAD_SEGMENT     equ 0x0
+STAGE2_LOAD_OFFSET      equ 0x500
 
 times 510-($-$$) db 0
 dw 0AA55h

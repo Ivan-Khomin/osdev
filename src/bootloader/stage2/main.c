@@ -1,9 +1,24 @@
-#include "stdint.h"
+#include <stdint.h>
 #include "stdio.h"
+#include "disk.h"
 
-void _cdecl cstart_(uint16_t bootDrive)
+void* g_data = (void*)0x20000;
+
+void __attribute__((cdecl)) start(uint16_t bootDrive)
 {
-    puts("Hello world from C!\n");
+    clrscr();
+    
+    DISK disk;
+    if (!DISK_Initialize(&disk, bootDrive))
+    {
+        printf("Cannot initialize disk!\n");
+        goto end;
+    }
 
+    DISK_ReadSectors(&disk, 0, 1, g_data);
+
+    print_buffer("Boot sector: ", g_data, 512);
+
+end:
     for (;;);
 }
