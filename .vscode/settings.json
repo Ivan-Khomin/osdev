@@ -2,6 +2,10 @@
     "files.associations": {
         "stdio.h": "c",
         "*.inc": "c",
-        "charconv": "c"
+        "charconv": "c",
+        "ranges": "c",
+        "cstdint": "c",
+        "binary.h": "c",
+        "idt.h": "c"
     }
 }
