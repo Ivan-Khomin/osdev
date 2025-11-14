@@ -6,6 +6,7 @@
         "ranges": "c",
         "cstdint": "c",
         "binary.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "stdint.h": "c"
     }
 }
