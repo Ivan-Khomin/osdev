@@ -1,6 +1,6 @@
 megs: 128
-romimage: file=/home/ivan/Ivan/Toolchain/bochs/BIOS-bochs-latest
-vgaromimage: file=/home/ivan/Ivan/Toolchain/bochs/VGABIOS-elpin-2.40
+romimage: file=/home/invis/Downloads/bochs/bios/BIOS-bochs-latest
+vgaromimage: file=/home/invis/Downloads/bochs/bios/VGABIOS-elpin-2.40
 floppya: 1_44=build/main_floppy.img, status=inserted
 boot: floppy
 mouse: enabled=0
