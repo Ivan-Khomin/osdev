@@ -17,13 +17,13 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
     DISK disk;
     if (!DISK_Initialize(&disk, bootDrive))
     {
-        printf("Cannot initialize disk!\n");
+        printf("Disk init error\n");
         goto end;
     }
 
     if (!FAT_Initialize(&disk))
     {
-        printf("Cannot initialize FAT!\n");
+        printf("FAT init error\n");
         goto end;
     }
 
