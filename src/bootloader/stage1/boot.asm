@@ -43,8 +43,13 @@ section .entry
     global start
 
     start:
-        ; save DS which contains segment of boot partition
-        mov di, ds
+        ; move partition entry from MBR to a different location so we 
+        ; don't overwrite it (which is passed through DS:SI)
+        mov ax, PARTITION_ENTRY_SEGMENT
+        mov es, ax
+        mov di, PARTITION_ENTRY_OFFSET
+        mov cx, 16
+        rep movsb
 
         ; setup data segments
         mov ax, 0           ; can't set ds/es directly
@@ -65,8 +70,6 @@ section .entry
         ; read something from floppy disk
         ; BIOS should set DL to drive number
         mov [ebr_drive_number], dl
-        mov [boot_partition_off], si
-        mov [boot_partition_seg], di
 
         ; show loading message
         mov si, msg_loading
@@ -119,8 +122,8 @@ section .entry
     .read_finish:
         ; jump to our kernel
         mov dl, [ebr_drive_number]          ; boot device in dl
-        mov si, [boot_partition_off]
-        mov di, [boot_partition_seg]
+        mov si, PARTITION_ENTRY_OFFSET
+        mov di, PARTITION_ENTRY_SEGMENT
 
         mov ax, STAGE2_LOAD_SEGMENT         ; set segment registers
         mov ds, ax
@@ -323,11 +326,11 @@ section .data
         .segment:           dw 0
         .lba:               dq 0
 
-    boot_partition_seg:     dw 0
-    boot_partition_off:     dw 0
-
     STAGE2_LOAD_SEGMENT     equ 0x0
     STAGE2_LOAD_OFFSET      equ 0x500
+
+    PARTITION_ENTRY_SEGMENT equ 0x2000
+    PARTITION_ENTRY_OFFSET  equ 0x0
 
 section .data
     global stage2_location

@@ -23,16 +23,22 @@ typedef struct {
 
 } __attribute__((packed)) MBR_Entry;
 
-uint32_t MBR_DetectPartition(DISK* disk, void* partition)
+void MBR_DetectPartition(Partition* part, DISK* disk, void* partition)
 {
+    part->disk = disk;
     if (disk->id < 0x80) {
-        return 0;
+        part->partitionOffset = 0;
+        part->partitionSize = (uint32_t)(disk->cylinders)
+            * (uint32_t)(disk->heads)
+            * (uint32_t)(disk->sectors);
+    } else {
+        MBR_Entry* entry = (MBR_Entry*)segoffset_to_linear(partition);
+        part->partitionOffset = entry->lbaStart;
+        part->partitionSize = entry->size;
     }
+}
 
-    MBR_Entry* entry = (MBR_Entry*)segoffset_to_linear(partition);
-    printf("attributes=%x\n", entry->attributes);
-    printf("lbaStart=%x\n", entry->lbaStart);
-    printf("size=%x\n", entry->size);
-
-    return entry->lbaStart;
+bool Partition_ReadSectors(Partition* part, uint32_t lba, uint8_t sectors, void* lowerDataOut)
+{
+    return DISK_ReadSectors(part->disk, lba + part->partitionOffset, sectors, lowerDataOut);
 }

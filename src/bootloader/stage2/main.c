@@ -22,19 +22,20 @@ void __attribute__((cdecl)) start(uint16_t bootDrive, void* partition)
         goto end;
     }
 
-    uint32_t partitionStart = MBR_DetectPartition(&disk, partition);
+    Partition part;
+    MBR_DetectPartition(&part, &disk, partition);
     
-    if (!FAT_Initialize(&disk))
+    if (!FAT_Initialize(&part))
     {
         printf("FAT init error\n");
         goto end;
     }
 
     // load kernel
-    FAT_File* fd = FAT_Open(&disk, "/kernel.bin");
+    FAT_File* fd = FAT_Open(&part, "/kernel.bin");
     uint32_t read;
     uint8_t* kernelBuffer = Kernel;
-    while ((read = FAT_Read(&disk, fd, MEMORY_LOAD_SIZE, KernelLoadBuffer)))
+    while ((read = FAT_Read(&part, fd, MEMORY_LOAD_SIZE, KernelLoadBuffer)))
     {
         memcpy(kernelBuffer, KernelLoadBuffer, read);
         kernelBuffer += read;
