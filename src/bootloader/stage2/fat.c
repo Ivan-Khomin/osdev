@@ -69,6 +69,7 @@ typedef struct
 static FAT_Data* g_Data;
 static uint8_t* g_Fat = NULL;
 static uint32_t g_DataSectionLba;
+static uint8_t g_FatType;
 
 bool FAT_ReadBootSector(DISK* disk)
 {
@@ -78,6 +79,11 @@ bool FAT_ReadBootSector(DISK* disk)
 bool FAT_ReadFat(DISK* disk)
 {
     return DISK_ReadSectors(disk, g_Data->BS.BootSector.ReservedSectors, g_Data->BS.BootSector.SectorsPerFat, g_Fat);
+}
+
+void FAT_Detect(DISK* disk)
+{
+
 }
 
 bool FAT_Initialize(DISK* disk)
@@ -93,6 +99,8 @@ bool FAT_Initialize(DISK* disk)
 
     // read FAT
     g_Fat = (uint8_t*)g_Data + sizeof(FAT_Data);
+    printf("BS.BytesPerSector = %x\n", g_Data->BS.BootSector.BytesPerSector);
+    printf("BS.SectorsPerFat = %x\n", g_Data->BS.BootSector.SectorsPerFat);
     uint32_t fatSize = g_Data->BS.BootSector.BytesPerSector * g_Data->BS.BootSector.SectorsPerFat;
     if (sizeof(FAT_Data) + fatSize >= MEMORY_FAT_SIZE)
     {

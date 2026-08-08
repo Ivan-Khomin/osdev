@@ -32,3 +32,10 @@ int memcmp(const void* ptr1, const void* ptr2, uint16_t num)
 
     return 0;
 }
+
+void* segoffset_to_linear(void* addr)
+{
+    uint16_t offset = (uint32_t)(addr) & 0xFFFF;
+    uint16_t segment = (uint32_t)(addr) >> 16;
+    return (void*)(segment * 16 + offset);
+}

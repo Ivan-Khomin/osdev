@@ -4,13 +4,14 @@
 #include "fat.h"
 #include "memdefs.h"
 #include "memory.h"
+#include "mbr.h"
 
 uint8_t* KernelLoadBuffer = (uint8_t*)MEMORY_LOAD_KERNEL;
 uint8_t* Kernel = (uint8_t*)MEMORY_KERNEL_ADDR;
 
 typedef void (*KernelStart)();
 
-void __attribute__((cdecl)) start(uint16_t bootDrive)
+void __attribute__((cdecl)) start(uint16_t bootDrive, void* partition)
 {
     clrscr();
     
@@ -21,6 +22,8 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
         goto end;
     }
 
+    uint32_t partitionStart = MBR_DetectPartition(&disk, partition);
+    
     if (!FAT_Initialize(&disk))
     {
         printf("FAT init error\n");
